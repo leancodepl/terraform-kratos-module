@@ -8,6 +8,37 @@ resource "random_password" "kratos_cipher_secret" {
   special = false
 }
 
+resource "kubernetes_job_v1" "kratos_migrations" {
+  metadata {
+    name      = "${var.project}-kratos-migrations"
+    namespace = data.kubernetes_namespace_v1.kratos_ns.metadata[0].name
+    labels    = local.labels_migrations
+  }
+  spec {
+    selector {
+      match_labels = local.labels_migrations
+    }
+    template {
+      metadata {
+        labels = local.labels_migrations
+      }
+      spec {
+        container {
+          name  = "kratos-migrations"
+          image = var.image
+          args  = ["migrate", "sql", "--read-from-env", "--yes"]
+          env_from {
+            secret_ref {
+              name = kubernetes_secret_v1.kratos_secret.metadata[0].name
+            }
+          }
+        }
+      }
+    }
+  }
+  wait_for_completion = true
+}
+
 resource "kubernetes_deployment_v1" "kratos_deployment" {
   metadata {
     name      = "${var.project}-kratos"
@@ -34,27 +65,6 @@ resource "kubernetes_deployment_v1" "kratos_deployment" {
           name = "config-yaml"
           secret {
             secret_name = kubernetes_secret_v1.kratos_config_yaml.metadata[0].name
-          }
-        }
-        init_container {
-          name  = "kratos-migrate"
-          image = var.image
-          args  = ["migrate", "sql", "--read-from-env", "--yes"]
-          volume_mount {
-            name       = "config-files"
-            mount_path = "/etc/kratos"
-            read_only  = true
-          }
-          volume_mount {
-            name       = "config-yaml"
-            sub_path   = ".kratos.yaml"
-            mount_path = "/home/ory/.kratos.yaml"
-            read_only  = true
-          }
-          env_from {
-            secret_ref {
-              name = kubernetes_secret_v1.kratos_secret.metadata[0].name
-            }
           }
         }
         container {
@@ -105,6 +115,7 @@ resource "kubernetes_deployment_v1" "kratos_deployment" {
       }
     }
   }
+  depends_on = [kubernetes_job_v1.kratos_migrations]
 }
 
 resource "kubernetes_config_map_v1" "kratos_config_files" {
