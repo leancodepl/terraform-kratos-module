@@ -25,6 +25,12 @@ variable "image" {
   nullable = false
 }
 
+variable "replicas" {
+  type     = number
+  default  = 1
+  nullable = false
+}
+
 variable "resources" {
   type = object({
     requests = object({
