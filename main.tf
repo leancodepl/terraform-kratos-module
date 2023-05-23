@@ -24,4 +24,8 @@ locals {
     project   = var.project
     component = "kratos"
   })
+  labels_migrations = merge(var.labels, {
+    project   = var.project
+    component = "kratos-migrations"
+  })
 }
