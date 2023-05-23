@@ -39,14 +39,14 @@ resource "kubernetes_job_v1" "kratos_migrations" {
   wait_for_completion = true
 }
 
-resource "kubernetes_deployment_v1" "kratos_deployment" {
+resource "kubernetes_deployment_v1" "kratos" {
   metadata {
     name      = "${var.project}-kratos"
     namespace = data.kubernetes_namespace_v1.kratos_ns.metadata[0].name
     labels    = local.labels
   }
   spec {
-    replicas = 1 # increasing number of replicas would require extracting courier to its own pod
+    replicas = 1
     selector {
       match_labels = local.labels
     }
@@ -70,7 +70,7 @@ resource "kubernetes_deployment_v1" "kratos_deployment" {
         container {
           name  = "kratos"
           image = var.image
-          args  = ["serve", "--watch-courier"]
+          args  = ["serve"]
           volume_mount {
             name       = "config-files"
             mount_path = "/etc/kratos"
@@ -98,6 +98,81 @@ resource "kubernetes_deployment_v1" "kratos_deployment" {
           resources {
             requests = var.resources.requests
             limits   = var.resources.limits
+          }
+          liveness_probe {
+            http_get {
+              path = "/health/alive"
+              port = "public"
+            }
+          }
+          readiness_probe {
+            http_get {
+              path = "/health/ready"
+              port = "public"
+            }
+          }
+        }
+      }
+    }
+  }
+  depends_on = [kubernetes_job_v1.kratos_migrations]
+}
+
+resource "kubernetes_deployment_v1" "kratos_courier" {
+  metadata {
+    name      = "${var.project}-kratos-courier"
+    namespace = data.kubernetes_namespace_v1.kratos_ns.metadata[0].name
+    labels    = local.labels_courier
+  }
+  spec {
+    replicas = 1
+    selector {
+      match_labels = local.labels_courier
+    }
+    template {
+      metadata {
+        labels = local.labels_courier
+      }
+      spec {
+        volume {
+          name = "config-files"
+          config_map {
+            name = kubernetes_config_map_v1.kratos_config_files.metadata[0].name
+          }
+        }
+        volume {
+          name = "config-yaml"
+          secret {
+            secret_name = kubernetes_secret_v1.kratos_config_yaml.metadata[0].name
+          }
+        }
+        container {
+          name  = "kratos-courier"
+          image = var.image
+          args  = ["courier", "watch"]
+          volume_mount {
+            name       = "config-files"
+            mount_path = "/etc/kratos"
+            read_only  = true
+          }
+          volume_mount {
+            name       = "config-yaml"
+            sub_path   = ".kratos.yaml"
+            mount_path = "/home/ory/.kratos.yaml"
+            read_only  = true
+          }
+          env_from {
+            secret_ref {
+              name = kubernetes_secret_v1.kratos_secret.metadata[0].name
+            }
+          }
+          port {
+            name           = "public"
+            container_port = "4433"
+          }
+          resources {
+            requests = var.courier_resources == null ? var.resources.requests : var.courier_resources.requests
+            limits   = var.courier_resources == null ? var.resources.limits : var.courier_resources.limits
           }
           liveness_probe {
             http_get {
