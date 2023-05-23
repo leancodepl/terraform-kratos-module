@@ -46,7 +46,7 @@ resource "kubernetes_deployment_v1" "kratos" {
     labels    = local.labels
   }
   spec {
-    replicas = 1
+    replicas = var.replicas < 1 ? 1 : var.replicas
     selector {
       match_labels = local.labels
     }
@@ -70,7 +70,7 @@ resource "kubernetes_deployment_v1" "kratos" {
         container {
           name  = "kratos"
           image = var.image
-          args  = ["serve"]
+          args  = var.replicas < 1 ? ["serve", "--watch-courier"] : ["serve"]
           volume_mount {
             name       = "config-files"
             mount_path = "/etc/kratos"
@@ -125,7 +125,7 @@ resource "kubernetes_deployment_v1" "kratos_courier" {
     labels    = local.labels_courier
   }
   spec {
-    replicas = 1
+    replicas = var.replicas < 1 ? 0 : 1
     selector {
       match_labels = local.labels_courier
     }
