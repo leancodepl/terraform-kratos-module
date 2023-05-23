@@ -39,6 +39,20 @@ variable "resources" {
   nullable = false
 }
 
+variable "courier_resources" {
+  type = object({
+    requests = object({
+      cpu    = string
+      memory = string
+    })
+    limits = object({
+      cpu    = string
+      memory = string
+    })
+  })
+  nullable = true
+}
+
 variable "config_files" {
   type     = map(string)
   default  = {}
