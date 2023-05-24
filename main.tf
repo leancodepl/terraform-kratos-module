@@ -20,6 +20,8 @@ data "kubernetes_namespace_v1" "kratos_ns" {
 }
 
 locals {
+  run_courier_as_inproc_background_task = var.replicas < 1
+
   labels = merge(var.labels, {
     project   = var.project
     component = "kratos"

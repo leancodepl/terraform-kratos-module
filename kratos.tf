@@ -46,7 +46,7 @@ resource "kubernetes_deployment_v1" "kratos" {
     labels    = local.labels
   }
   spec {
-    replicas = var.replicas < 1 ? 1 : var.replicas
+    replicas = local.run_courier_as_inproc_background_task ? 1 : var.replicas
     selector {
       match_labels = local.labels
     }
@@ -119,13 +119,15 @@ resource "kubernetes_deployment_v1" "kratos" {
 }
 
 resource "kubernetes_deployment_v1" "kratos_courier" {
+  count = local.run_courier_as_inproc_background_task ? 0 : 1
+
   metadata {
     name      = "${var.project}-kratos-courier"
     namespace = data.kubernetes_namespace_v1.kratos_ns.metadata[0].name
     labels    = local.labels_courier
   }
   spec {
-    replicas = var.replicas < 1 ? 0 : 1
+    replicas = 1
     selector {
       match_labels = local.labels_courier
     }
