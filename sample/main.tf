@@ -73,7 +73,8 @@ provider "postgresql" {
 }
 
 module "sample" {
-  source = "../azure-standalone"
+  depends_on = [azurerm_resource_group.sample, kubernetes_namespace_v1.sample]
+  source     = "../azure-standalone"
 
   postgresql = {
     resource_group_name = azurerm_resource_group.sample.name
