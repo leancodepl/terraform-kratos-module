@@ -4,6 +4,8 @@ resource "postgresql_role" "roles" {
   name     = each.key
   password = random_password.role_passwords[each.key].result
   login    = true
+
+  skip_drop_role = true
 }
 
 resource "postgresql_grant" "role_database_access" {
