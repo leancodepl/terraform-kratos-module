@@ -1,12 +1,3 @@
-provider "postgresql" {
-  host      = azurerm_postgresql_flexible_server.main.fqdn
-  database  = "postgres"
-  username  = var.server.administrator_login
-  password  = random_password.administrator_password.result
-  superuser = false
-  sslmode   = "verify-full"
-}
-
 resource "postgresql_role" "roles" {
   for_each = var.databases
 
