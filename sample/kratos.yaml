@@ -1,0 +1,106 @@
+version: v0.13.0
+serve:
+  public:
+    cors:
+      enabled: true
+      allowed_origins:
+        - https://${domain}
+        - https://*.${domain}
+%{ for origin in additional_cors_allowed_origins ~}
+        - ${origin}
+%{ endfor ~}
+cookies:
+  domain: "${domain}"
+  same_site: Strict
+selfservice:
+  default_browser_return_url: https://${domain}/
+  allowed_return_urls:
+    - https://${domain}/
+%{ for url in additional_allowed_return_urls ~}
+    - ${url}
+%{ endfor ~}
+  methods:
+    link:
+      config:
+        lifespan: 1h
+      enabled: true
+    password:
+      enabled: true
+    oidc:
+      enabled: true
+      config:
+        providers:
+          - id: apple
+            provider: apple
+            label: Apple
+            issuer_url: https://appleid.apple.com
+            client_id: "${oidc_config.apple.client_id}"
+            apple_team_id: "${oidc_config.apple.team_id}"
+            apple_private_key_id: "${oidc_config.apple.private_key_id}"
+            apple_private_key: "${oidc_config.apple.private_key}"
+            scope:
+              - openid
+              - email
+              - name
+            mapper_url: file:///etc/kratos/oidc.apple.mapper.jsonnet
+          - id: google
+            provider: google
+            label: Google
+            issuer_url: https://accounts.google.com
+            client_id: "${oidc_config.google.client_id}"
+            client_secret: "${oidc_config.google.client_secret}"
+            scope:
+              - openid
+              - email
+              - profile
+            mapper_url: file:///etc/kratos/oidc.google.mapper.jsonnet
+          - id: facebook
+            provider: facebook
+            label: Facebook
+            issuer_url: https://www.facebook.com
+            client_id: "${oidc_config.facebook.client_id}"
+            client_secret: "${oidc_config.facebook.client_secret}"
+            scope:
+              - email
+              - public_profile
+            mapper_url: file:///etc/kratos/oidc.facebook.mapper.jsonnet
+    profile:
+      enabled: true
+  flows:
+    registration:
+      # ui_url: https://${domain}/registration
+      lifespan: 1h
+      enabled: true
+      after:
+        oidc:
+          hooks:
+            - hook: session
+    login:
+      lifespan: 1h
+      # ui_url: https://${domain}/login
+      after:
+        password:
+          hooks:
+            - hook: require_verified_address # ensures that user has confirmed email when signing in with a password
+    recovery:
+      # ui_url: https://${domain}/recovery
+      enabled: true
+      use: code
+    error: {}
+      # ui_url: https://${domain}/error
+    settings: {}
+      # ui_url: https://${domain}/settings
+log:
+  level: info
+  format: json
+ciphers:
+  algorithm: xchacha20-poly1305
+hashers:
+  algorithm: bcrypt
+  bcrypt:
+    cost: 8
+identity:
+  default_schema_id: user
+  schemas:
+    - id: user
+      url: file:///etc/kratos/identity.user.schema.json
