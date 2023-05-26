@@ -229,6 +229,8 @@ resource "kubernetes_secret_v1" "kratos_secret" {
     "COURIER_SMTP_CONNECTION_URI" = var.courier_smtp_connection_uri
     "SECRETS_COOKIE"              = random_password.kratos_cookie_secret.result
     "SECRETS_CIPHER"              = random_password.kratos_cipher_secret.result
+    "SERVE_ADMIN_BASE_URL"        = "${local.service_url}:4434/"
+    "SERVE_PUBLIC_BASE_URL"       = var.ingress_host == null ? null : "https://${var.ingress_host}/"
   }
 }
 
