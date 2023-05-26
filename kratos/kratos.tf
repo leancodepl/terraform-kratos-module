@@ -15,9 +15,6 @@ resource "kubernetes_job_v1" "kratos_migrations" {
     labels    = local.labels_migrations
   }
   spec {
-    selector {
-      match_labels = local.labels_migrations
-    }
     template {
       metadata {
         labels = local.labels_migrations
@@ -70,7 +67,7 @@ resource "kubernetes_deployment_v1" "kratos" {
         container {
           name  = "kratos"
           image = var.image
-          args  = var.replicas < 1 ? ["serve", "--watch-courier"] : ["serve"]
+          args  = var.replicas < 1 ? ["serve", "--watch-courier", "-c", "/home/ory/.kratos.yaml"] : ["serve", "-c", "/home/ory/.kratos.yaml"]
           volume_mount {
             name       = "config-files"
             mount_path = "/etc/kratos"
@@ -151,7 +148,7 @@ resource "kubernetes_deployment_v1" "kratos_courier" {
         container {
           name  = "kratos-courier"
           image = var.image
-          args  = ["courier", "watch"]
+          args  = ["courier", "watch", "-c", "/home/ory/.kratos.yaml"]
           volume_mount {
             name       = "config-files"
             mount_path = "/etc/kratos"
@@ -175,18 +172,6 @@ resource "kubernetes_deployment_v1" "kratos_courier" {
           resources {
             requests = var.courier_resources == null ? var.resources.requests : var.courier_resources.requests
             limits   = var.courier_resources == null ? var.resources.limits : var.courier_resources.limits
-          }
-          liveness_probe {
-            http_get {
-              path = "/health/alive"
-              port = "public"
-            }
-          }
-          readiness_probe {
-            http_get {
-              path = "/health/ready"
-              port = "public"
-            }
           }
         }
       }
