@@ -63,6 +63,15 @@ resource "kubernetes_namespace_v1" "sample" {
   }
 }
 
+provider "postgresql" {
+  host      = module.sample.postgresql_provider_config.host
+  database  = module.sample.postgresql_provider_config.database
+  username  = module.sample.postgresql_provider_config.username
+  password  = module.sample.postgresql_provider_config.password
+  superuser = module.sample.postgresql_provider_config.superuser
+  sslmode   = module.sample.postgresql_provider_config.sslmode
+}
+
 module "sample" {
   source = "../azure-standalone"
 

@@ -24,8 +24,3 @@ data "azurerm_resource_group" "postgresql" {
 locals {
   libpg_connection_strings     = { for key, db in var.databases : key => "postgresql://${urlencode(postgresql_role.roles[key].name)}:${urlencode(postgresql_role.roles[key].password)}@${azurerm_postgresql_flexible_server.main.fqdn}/${azurerm_postgresql_flexible_server_database.databases[key].name}?sslmode=verify-full" }
 }
-
-output "libpg_connection_strings" {
-  value     = local.libpg_connection_strings
-  sensitive = true
-}
