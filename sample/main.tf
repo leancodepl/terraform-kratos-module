@@ -104,7 +104,7 @@ module "sample" {
   kratos = {
     namespace    = kubernetes_namespace_v1.sample.metadata[0].name
     project      = var.project
-    ingress_host = var.domain
+    ingress_host = "auth.${var.domain}"
     labels       = {}
     image        = "docker.io/oryd/kratos:v0.13.0"
     replicas     = 2
