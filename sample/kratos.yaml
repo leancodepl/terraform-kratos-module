@@ -72,6 +72,9 @@ selfservice:
       lifespan: 1h
       enabled: true
       after:
+        password:
+          hooks:
+            - hook: show_verification_ui
         oidc:
           hooks:
             - hook: session
