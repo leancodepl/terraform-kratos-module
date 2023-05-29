@@ -68,7 +68,7 @@ selfservice:
       enabled: true
   flows:
     registration:
-      # ui_url: https://${domain}/registration
+      ui_url: https://${domain}/registration
       lifespan: 1h
       enabled: true
       after:
@@ -77,19 +77,19 @@ selfservice:
             - hook: session
     login:
       lifespan: 1h
-      # ui_url: https://${domain}/login
+      ui_url: https://${domain}/login
       after:
         password:
           hooks:
             - hook: require_verified_address # ensures that user has confirmed email when signing in with a password
     recovery:
-      # ui_url: https://${domain}/recovery
+      ui_url: https://${domain}/recovery
       enabled: true
       use: code
-    error: {}
-      # ui_url: https://${domain}/error
-    settings: {}
-      # ui_url: https://${domain}/settings
+    error:
+      ui_url: https://${domain}/error
+    settings:
+      ui_url: https://${domain}/settings
 log:
   level: info
   format: json
