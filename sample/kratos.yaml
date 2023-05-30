@@ -37,7 +37,7 @@ selfservice:
             client_id: "${oidc_config.apple.client_id}"
             apple_team_id: "${oidc_config.apple.team_id}"
             apple_private_key_id: "${oidc_config.apple.private_key_id}"
-            apple_private_key: "${oidc_config.apple.private_key}"
+            apple_private_key: "${replace(oidc_config.apple.private_key, "\n", "\\n")}"
             scope:
               - openid
               - email
