@@ -11,7 +11,10 @@ serve:
 %{ endfor ~}
 cookies:
   domain: "${domain}"
-  same_site: Strict
+  same_site: Lax
+session:
+  cookie:
+    same_site: Strict
 selfservice:
   default_browser_return_url: https://${domain}/
   allowed_return_urls:
