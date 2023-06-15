@@ -19,6 +19,10 @@ variable "project" {
   type = string
 }
 
+variable "project_title" {
+  type = string
+}
+
 variable "location" {
   type = string
 }

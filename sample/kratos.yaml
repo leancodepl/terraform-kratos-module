@@ -29,6 +29,12 @@ selfservice:
       enabled: true
     password:
       enabled: true
+    lookup_secret:
+      enabled: true
+    totp:
+      enabled: true
+      config:
+        issuer: "${totp_issuer}"
     oidc:
       enabled: true
       config:
