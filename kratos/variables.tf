@@ -92,5 +92,5 @@ variable "courier_smtp_connection_uri" {
   type        = string
   description = "SMTP connection data and credentials in URI form for email delivery, e.g. smtps://apikey:SG.myapikey@smtp.sendgrid.net:465"
   sensitive   = true
-  nullable    = true
+  nullable    = false
 }
