@@ -87,6 +87,10 @@ selfservice:
         oidc:
           hooks:
             - hook: session
+    verification:
+      ui_url: https://${domain}/verification
+      enabled: true
+      use: code
     login:
       lifespan: 1h
       ui_url: https://${domain}/login
