@@ -139,6 +139,7 @@ module "sample" {
       additional_cors_allowed_origins = []
       additional_allowed_return_urls  = []
       domain                          = var.domain
+      totp_issuer                     = var.project_title
       oidc_config                     = var.oidc_config
     })
 
