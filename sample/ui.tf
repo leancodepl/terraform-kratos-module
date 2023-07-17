@@ -23,7 +23,7 @@ resource "kubernetes_deployment_v1" "kratos" {
       spec {
         container {
           name  = "kratos-ui"
-          image = "docker.io/oryd/kratos-selfservice-ui-node:v0.13.0"
+          image = "docker.io/oryd/kratos-selfservice-ui-node:v1.0.0"
           env {
             name  = "KRATOS_PUBLIC_URL"
             value = module.sample.kratos.internal_service_url.public
