@@ -106,7 +106,7 @@ module "sample" {
     project      = var.project
     ingress_host = "auth.${var.domain}"
     labels       = {}
-    image        = "docker.io/oryd/kratos:v0.13.0"
+    image        = "docker.io/oryd/kratos:v1.0.0"
     replicas     = 2
 
     resources = {
