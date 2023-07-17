@@ -26,7 +26,7 @@ variable "labels" {
 variable "image" {
   type        = string
   description = "Image repository and version to use for deployment"
-  default     = "docker.io/oryd/kratos:v0.13.0"
+  default     = "docker.io/oryd/kratos:v1.0.0"
   nullable    = false
 }
 
