@@ -163,6 +163,7 @@ resource "kubernetes_deployment_v1" "kratos" {
           }
           dynamic "env" {
             for_each = var.env
+
             content {
               name  = env.value.name
               value = env.value.value
@@ -190,7 +191,6 @@ resource "kubernetes_deployment_v1" "kratos" {
                       key      = secret_key_ref.value.key
                     }
                   }
-
 
                   dynamic "field_ref" {
                     for_each = value_from.value.field_ref[*]
