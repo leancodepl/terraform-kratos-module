@@ -31,6 +31,7 @@ resource "kubernetes_job_v1" "kratos_migrations" {
           }
           dynamic "env" {
             for_each = var.env
+
             content {
               name  = env.value.name
               value = env.value.value
@@ -58,7 +59,6 @@ resource "kubernetes_job_v1" "kratos_migrations" {
                       key      = secret_key_ref.value.key
                     }
                   }
-
 
                   dynamic "field_ref" {
                     for_each = value_from.value.field_ref[*]
@@ -281,6 +281,7 @@ resource "kubernetes_deployment_v1" "kratos_courier" {
           }
           dynamic "env" {
             for_each = var.env
+
             content {
               name  = env.value.name
               value = env.value.value
@@ -308,7 +309,6 @@ resource "kubernetes_deployment_v1" "kratos_courier" {
                       key      = secret_key_ref.value.key
                     }
                   }
-
 
                   dynamic "field_ref" {
                     for_each = value_from.value.field_ref[*]
