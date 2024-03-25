@@ -94,3 +94,35 @@ variable "courier_smtp_connection_uri" {
   sensitive   = true
   nullable    = false
 }
+
+variable "env" {
+  type = list(object({
+    name  = string
+    value = optional(string)
+    value_from = optional(object({
+      config_map_key_ref = optional(object({
+        optional = bool
+        name     = string
+        key      = string
+      }))
+      secret_key_ref = optional(object({
+        optional = bool
+        name     = string
+        key      = string
+      }))
+      field_ref = optional(object({
+        api_version = string
+        field_path  = string
+      }))
+      resource_field_ref = optional(object({
+        container_name = string
+        divisor        = string
+        resource       = string
+      }))
+    }))
+  }))
+  description = "A list of additional environment variables that will be passed as the `env` block in pods"
+  sensitive   = false
+  nullable    = false
+  default     = []
+}

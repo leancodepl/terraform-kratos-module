@@ -29,6 +29,59 @@ resource "kubernetes_job_v1" "kratos_migrations" {
               name = kubernetes_secret_v1.kratos_secret.metadata[0].name
             }
           }
+          dynamic "env" {
+            for_each = var.env
+            content {
+              name  = env.value.name
+              value = env.value.value
+
+              dynamic "value_from" {
+                for_each = env.value.value_from[*]
+
+                content {
+                  dynamic "config_map_key_ref" {
+                    for_each = value_from.value.config_map_key_ref[*]
+
+                    content {
+                      optional = config_map_key_ref.value.optional
+                      name     = config_map_key_ref.value.name
+                      key      = config_map_key_ref.value.key
+                    }
+                  }
+
+                  dynamic "secret_key_ref" {
+                    for_each = value_from.value.secret_key_ref[*]
+
+                    content {
+                      optional = secret_key_ref.value.optional
+                      name     = secret_key_ref.value.name
+                      key      = secret_key_ref.value.key
+                    }
+                  }
+
+
+                  dynamic "field_ref" {
+                    for_each = value_from.value.field_ref[*]
+
+                    content {
+                      api_version = field_ref.value.api_version
+                      field_path  = field_ref.value.field_path
+                    }
+                  }
+
+                  dynamic "resource_field_ref" {
+                    for_each = value_from.value.resource_field_ref[*]
+
+                    content {
+                      container_name = resource_field_ref.value.container_name
+                      divisor        = resource_field_ref.value.divisor
+                      resource       = resource_field_ref.value.resource
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -108,6 +161,59 @@ resource "kubernetes_deployment_v1" "kratos" {
               port = "public"
             }
           }
+          dynamic "env" {
+            for_each = var.env
+
+            content {
+              name  = env.value.name
+              value = env.value.value
+
+              dynamic "value_from" {
+                for_each = env.value.value_from[*]
+
+                content {
+                  dynamic "config_map_key_ref" {
+                    for_each = value_from.value.config_map_key_ref[*]
+
+                    content {
+                      optional = config_map_key_ref.value.optional
+                      name     = config_map_key_ref.value.name
+                      key      = config_map_key_ref.value.key
+                    }
+                  }
+
+                  dynamic "secret_key_ref" {
+                    for_each = value_from.value.secret_key_ref[*]
+
+                    content {
+                      optional = secret_key_ref.value.optional
+                      name     = secret_key_ref.value.name
+                      key      = secret_key_ref.value.key
+                    }
+                  }
+
+                  dynamic "field_ref" {
+                    for_each = value_from.value.field_ref[*]
+
+                    content {
+                      api_version = field_ref.value.api_version
+                      field_path  = field_ref.value.field_path
+                    }
+                  }
+
+                  dynamic "resource_field_ref" {
+                    for_each = value_from.value.resource_field_ref[*]
+
+                    content {
+                      container_name = resource_field_ref.value.container_name
+                      divisor        = resource_field_ref.value.divisor
+                      resource       = resource_field_ref.value.resource
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -172,6 +278,59 @@ resource "kubernetes_deployment_v1" "kratos_courier" {
           resources {
             requests = var.courier_resources == null ? var.resources.requests : var.courier_resources.requests
             limits   = var.courier_resources == null ? var.resources.limits : var.courier_resources.limits
+          }
+          dynamic "env" {
+            for_each = var.env
+            content {
+              name  = env.value.name
+              value = env.value.value
+
+              dynamic "value_from" {
+                for_each = env.value.value_from[*]
+
+                content {
+                  dynamic "config_map_key_ref" {
+                    for_each = value_from.value.config_map_key_ref[*]
+
+                    content {
+                      optional = config_map_key_ref.value.optional
+                      name     = config_map_key_ref.value.name
+                      key      = config_map_key_ref.value.key
+                    }
+                  }
+
+                  dynamic "secret_key_ref" {
+                    for_each = value_from.value.secret_key_ref[*]
+
+                    content {
+                      optional = secret_key_ref.value.optional
+                      name     = secret_key_ref.value.name
+                      key      = secret_key_ref.value.key
+                    }
+                  }
+
+
+                  dynamic "field_ref" {
+                    for_each = value_from.value.field_ref[*]
+
+                    content {
+                      api_version = field_ref.value.api_version
+                      field_path  = field_ref.value.field_path
+                    }
+                  }
+
+                  dynamic "resource_field_ref" {
+                    for_each = value_from.value.resource_field_ref[*]
+
+                    content {
+                      container_name = resource_field_ref.value.container_name
+                      divisor        = resource_field_ref.value.divisor
+                      resource       = resource_field_ref.value.resource
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
