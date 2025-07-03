@@ -32,9 +32,35 @@ variable "image" {
 
 variable "replicas" {
   type        = number
-  description = "Number of main Kratos pod replicas, special value of 0 is treated as 1 but also disables separate courier pod"
+  description = "Number of main Kratos pod replicas, must be a positive integer"
   default     = 1
   nullable    = false
+
+  validation {
+    condition     = can(parseint(tostring(var.replicas), 10))
+    error_message = "The replicas value must be an integer."
+  }
+
+  validation {
+    condition     = var.replicas >= 1
+    error_message = "The replicas value must be positive."
+  }
+}
+
+variable "courier_mode" {
+  type        = string
+  description = "Message courier deployment mode, one of: \"disabled\", \"background\", \"standalone\""
+  nullable    = false
+
+  validation {
+    condition     = contains(["disabled", "background", "standalone"], var.courier_mode)
+    error_message = "The value of courier_mode must be one of: \"disabled\", \"background\", \"standalone\"."
+  }
+
+  validation {
+    condition     = var.courier_mode != "background" || var.replicas == 1
+    error_message = "The value of replicas must be 1 to enable message courier as a background task on the sole Kratos pod."
+  }
 }
 
 variable "resources" {

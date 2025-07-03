@@ -96,7 +96,7 @@ resource "kubernetes_deployment_v1" "kratos" {
     labels    = local.labels
   }
   spec {
-    replicas = local.run_courier_as_inproc_background_task ? 1 : var.replicas
+    replicas = var.replicas
     selector {
       match_labels = local.labels
     }
@@ -120,7 +120,7 @@ resource "kubernetes_deployment_v1" "kratos" {
         container {
           name  = "kratos"
           image = var.image
-          args  = var.replicas < 1 ? ["serve", "--watch-courier", "-c", "/home/ory/.kratos.yaml"] : ["serve", "-c", "/home/ory/.kratos.yaml"]
+          args  = var.courier_mode == "background" ? ["serve", "--watch-courier", "-c", "/home/ory/.kratos.yaml"] : ["serve", "-c", "/home/ory/.kratos.yaml"]
           volume_mount {
             name       = "config-files"
             mount_path = "/etc/kratos"
@@ -222,7 +222,7 @@ resource "kubernetes_deployment_v1" "kratos" {
 }
 
 resource "kubernetes_deployment_v1" "kratos_courier" {
-  count = local.run_courier_as_inproc_background_task ? 0 : 1
+  count = var.courier_mode == "standalone" ? 1 : 0
 
   metadata {
     name      = "${var.project}-kratos-courier"
