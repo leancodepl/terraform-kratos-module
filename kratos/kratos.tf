@@ -1,11 +1,25 @@
 resource "random_password" "kratos_cookie_secret" {
+  count = var.cookie_secret == null ? 1 : 0
+
   length  = 64
   special = false
 }
 
+moved {
+  from = random_password.kratos_cookie_secret
+  to   = random_password.kratos_cookie_secret[0]
+}
+
 resource "random_password" "kratos_cipher_secret" {
+  count = var.cipher_secret == null ? 1 : 0
+
   length  = 32
   special = false
+}
+
+moved {
+  from = random_password.kratos_cipher_secret
+  to   = random_password.kratos_cipher_secret[0]
 }
 
 resource "kubernetes_job_v1" "kratos_migrations" {
@@ -371,8 +385,8 @@ resource "kubernetes_secret_v1" "kratos_secret" {
   data = {
     "DSN"                         = var.dsn
     "COURIER_SMTP_CONNECTION_URI" = var.courier_smtp_connection_uri
-    "SECRETS_COOKIE"              = random_password.kratos_cookie_secret.result
-    "SECRETS_CIPHER"              = random_password.kratos_cipher_secret.result
+    "SECRETS_COOKIE"              = local.cookie_secret
+    "SECRETS_CIPHER"              = local.cipher_secret
     "SERVE_ADMIN_BASE_URL"        = "${local.service_url}:4434/"
     "SERVE_PUBLIC_BASE_URL"       = var.ingress_host == null ? null : "https://${var.ingress_host}/"
   }
@@ -434,5 +448,8 @@ resource "kubernetes_ingress_v1" "kratos_ingress" {
 }
 
 locals {
+  cookie_secret = try(random_password.kratos_cookie_secret[0].result, var.cookie_secret)
+  cipher_secret = try(random_password.kratos_cipher_secret[0].result, var.cipher_secret)
+
   service_url = "http://${kubernetes_service_v1.kratos_service.metadata[0].name}.${kubernetes_service_v1.kratos_service.metadata[0].namespace}.svc.cluster.local"
 }

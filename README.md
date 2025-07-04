@@ -41,8 +41,10 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_cipher_secret"></a> [cipher\_secret](#input\_cipher\_secret) | External cipher secret to import and use instead of generating one, must be exactly 32 characters long | `string` | `null` | no |
 | <a name="input_config_files"></a> [config\_files](#input\_config\_files) | Additional files to be mounted at /etc/kratos, e.g. identity schemas and courier templates | `map(string)` | `{}` | no |
 | <a name="input_config_yaml"></a> [config\_yaml](#input\_config\_yaml) | Content of kratos.yaml configuration file | `string` | n/a | yes |
+| <a name="input_cookie_secret"></a> [cookie\_secret](#input\_cookie\_secret) | External cookie secret to import and use instead of generating one, must be at least 16 characters long | `string` | `null` | no |
 | <a name="input_courier_mode"></a> [courier\_mode](#input\_courier\_mode) | Message courier deployment mode, one of: "disabled", "background", "standalone" | `string` | n/a | yes |
 | <a name="input_courier_resources"></a> [courier\_resources](#input\_courier\_resources) | Resource requests and limits for courier Kratos pod | <pre>object({<br/>    requests = object({<br/>      cpu    = string<br/>      memory = string<br/>    })<br/>    limits = object({<br/>      cpu    = string<br/>      memory = string<br/>    })<br/>  })</pre> | n/a | yes |
 | <a name="input_courier_smtp_connection_uri"></a> [courier\_smtp\_connection\_uri](#input\_courier\_smtp\_connection\_uri) | SMTP connection data and credentials in URI form for email delivery, e.g. smtps://apikey:SG.myapikey@smtp.sendgrid.net:465 | `string` | n/a | yes |
@@ -60,6 +62,8 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_cipher_secret"></a> [cipher\_secret](#output\_cipher\_secret) | Used (generated or imported) cipher secret |
+| <a name="output_cookie_secret"></a> [cookie\_secret](#output\_cookie\_secret) | Used (generated or imported) cookie secret |
 | <a name="output_external_ingress_url"></a> [external\_ingress\_url](#output\_external\_ingress\_url) | Public URL for connecting to deployed Kratos instance from outside the cluster, if ingress\_host was provided |
 | <a name="output_internal_service_url"></a> [internal\_service\_url](#output\_internal\_service\_url) | Cluster-private URLs for connecting to deployed Kratos instance, both public and admin API endpoints |
 | <a name="output_service_name"></a> [service\_name](#output\_service\_name) | Name of created Kubernetes service for use with other routing schemes |
