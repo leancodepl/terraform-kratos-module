@@ -15,3 +15,15 @@ output "service_name" {
   description = "Name of created Kubernetes service for use with other routing schemes"
   value       = kubernetes_service_v1.kratos_service.metadata[0].name
 }
+
+output "cookie_secret" {
+  description = "Used (generated or imported) cookie secret"
+  value       = local.cookie_secret
+  sensitive   = true
+}
+
+output "cipher_secret" {
+  description = "Used (generated or imported) cipher secret"
+  value       = local.cipher_secret
+  sensitive   = true
+}
