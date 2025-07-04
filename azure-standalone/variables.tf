@@ -31,6 +31,7 @@ variable "kratos" {
     labels       = map(string)
     image        = string
     replicas     = number
+    courier_mode = string
 
     resources = object({
       requests = object({
