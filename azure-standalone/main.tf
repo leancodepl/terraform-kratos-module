@@ -27,6 +27,7 @@ module "kratos" {
   labels       = var.kratos.labels
   image        = var.kratos.image
   replicas     = var.kratos.replicas
+  courier_mode = var.kratos.courier_mode
 
   resources         = var.kratos.resources
   courier_resources = var.kratos.courier_resources

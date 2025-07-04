@@ -108,6 +108,7 @@ module "sample" {
     labels       = {}
     image        = "docker.io/oryd/kratos:v1.0.0"
     replicas     = 2
+    courier_mode = "standalone"
 
     resources = {
       requests = {
