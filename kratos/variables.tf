@@ -121,29 +121,24 @@ variable "courier_smtp_connection_uri" {
   nullable    = false
 }
 
-variable "cookie_secret" {
-  type        = string
-  description = "External cookie secret to import and use instead of generating one, must be at least 16 characters long"
+variable "secrets" {
+  type = object({
+    cookie = string
+    cipher = string
+  })
+  description = "External secrets to import and use instead of generating new ones, cookie must be at least 16 characters long and cipher must be exactly 32 characters long"
   sensitive   = true
   nullable    = true
   default     = null
 
   validation {
-    condition     = var.cookie_secret == null || length(var.cookie_secret) >= 16
-    error_message = "The value of cookie_secret must be at least 16 characters long."
+    condition     = var.secrets == null || length(var.secrets.cookie) >= 16
+    error_message = "The value of cookie secret must be at least 16 characters long."
   }
-}
-
-variable "cipher_secret" {
-  type        = string
-  description = "External cipher secret to import and use instead of generating one, must be exactly 32 characters long"
-  sensitive   = true
-  nullable    = true
-  default     = null
 
   validation {
-    condition     = var.cipher_secret == null || length(var.cipher_secret) == 32
-    error_message = "The value of cipher_secret must be exactly 32 characters long."
+    condition     = var.secrets == null || length(var.secrets.cipher) == 32
+    error_message = "The value of cipher secret must be exactly 32 characters long."
   }
 }
 
