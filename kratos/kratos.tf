@@ -1,5 +1,5 @@
 resource "random_password" "kratos_cookie_secret" {
-  count = var.cookie_secret == null ? 1 : 0
+  count = var.secrets == null ? 1 : 0
 
   length  = 64
   special = false
@@ -11,7 +11,7 @@ moved {
 }
 
 resource "random_password" "kratos_cipher_secret" {
-  count = var.cipher_secret == null ? 1 : 0
+  count = var.secrets == null ? 1 : 0
 
   length  = 32
   special = false
@@ -448,8 +448,8 @@ resource "kubernetes_ingress_v1" "kratos_ingress" {
 }
 
 locals {
-  cookie_secret = try(random_password.kratos_cookie_secret[0].result, var.cookie_secret)
-  cipher_secret = try(random_password.kratos_cipher_secret[0].result, var.cipher_secret)
+  cookie_secret = try(random_password.kratos_cookie_secret[0].result, var.secrets.cookie)
+  cipher_secret = try(random_password.kratos_cipher_secret[0].result, var.secrets.cipher)
 
   service_url = "http://${kubernetes_service_v1.kratos_service.metadata[0].name}.${kubernetes_service_v1.kratos_service.metadata[0].namespace}.svc.cluster.local"
 }

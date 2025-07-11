@@ -41,10 +41,8 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cipher_secret"></a> [cipher\_secret](#input\_cipher\_secret) | External cipher secret to import and use instead of generating one, must be exactly 32 characters long | `string` | `null` | no |
 | <a name="input_config_files"></a> [config\_files](#input\_config\_files) | Additional files to be mounted at /etc/kratos, e.g. identity schemas and courier templates | `map(string)` | `{}` | no |
 | <a name="input_config_yaml"></a> [config\_yaml](#input\_config\_yaml) | Content of kratos.yaml configuration file | `string` | n/a | yes |
-| <a name="input_cookie_secret"></a> [cookie\_secret](#input\_cookie\_secret) | External cookie secret to import and use instead of generating one, must be at least 16 characters long | `string` | `null` | no |
 | <a name="input_courier_mode"></a> [courier\_mode](#input\_courier\_mode) | Message courier deployment mode, one of: "disabled", "background", "standalone" | `string` | n/a | yes |
 | <a name="input_courier_resources"></a> [courier\_resources](#input\_courier\_resources) | Resource requests and limits for courier Kratos pod | <pre>object({<br/>    requests = object({<br/>      cpu    = string<br/>      memory = string<br/>    })<br/>    limits = object({<br/>      cpu    = string<br/>      memory = string<br/>    })<br/>  })</pre> | n/a | yes |
 | <a name="input_courier_smtp_connection_uri"></a> [courier\_smtp\_connection\_uri](#input\_courier\_smtp\_connection\_uri) | SMTP connection data and credentials in URI form for email delivery, e.g. smtps://apikey:SG.myapikey@smtp.sendgrid.net:465 | `string` | n/a | yes |
@@ -57,6 +55,7 @@ No modules.
 | <a name="input_project"></a> [project](#input\_project) | Project name to used as label and prefix for created resources | `string` | n/a | yes |
 | <a name="input_replicas"></a> [replicas](#input\_replicas) | Number of main Kratos pod replicas, must be a positive integer | `number` | `1` | no |
 | <a name="input_resources"></a> [resources](#input\_resources) | Resource requests and limits for main Kratos pods | <pre>object({<br/>    requests = object({<br/>      cpu    = string<br/>      memory = string<br/>    })<br/>    limits = object({<br/>      cpu    = string<br/>      memory = string<br/>    })<br/>  })</pre> | n/a | yes |
+| <a name="input_secrets"></a> [secrets](#input\_secrets) | External secrets to import and use instead of generating new ones, cookie must be at least 16 characters long and cipher must be exactly 32 characters long | <pre>object({<br/>    cookie = string<br/>    cipher = string<br/>  })</pre> | `null` | no |
 
 ## Outputs
 
