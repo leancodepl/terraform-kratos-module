@@ -131,7 +131,7 @@ variable "secrets" {
   nullable    = true
   default     = null
 
-  # Wrapping expressions in "try" functions to satisfy terrafom validation
+  # Wrapping expressions in "try" functions to satisfy terraform validation
   validation {
     condition     = var.secrets == null || try(length(var.secrets.cookie), 0) >= 16
     error_message = "The value of cookie secret must be at least 16 characters long."
