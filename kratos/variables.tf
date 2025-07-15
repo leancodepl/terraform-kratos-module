@@ -131,13 +131,14 @@ variable "secrets" {
   nullable    = true
   default     = null
 
+  # Wrapping expressions in "try" functions to satisfy terrafom validation
   validation {
-    condition     = var.secrets == null || length(var.secrets.cookie) >= 16
+    condition     = var.secrets == null || try(length(var.secrets.cookie), 0) >= 16
     error_message = "The value of cookie secret must be at least 16 characters long."
   }
 
   validation {
-    condition     = var.secrets == null || length(var.secrets.cipher) == 32
+    condition     = var.secrets == null || try(length(var.secrets.cipher), 0) == 32
     error_message = "The value of cipher secret must be exactly 32 characters long."
   }
 }
