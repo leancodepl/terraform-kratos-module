@@ -103,6 +103,14 @@ resource "kubernetes_job_v1" "kratos_migrations" {
   wait_for_completion = true
 }
 
+resource "kubernetes_service_account_v1" "kratos" {
+  metadata {
+    name      = "${var.project}-kratos"
+    namespace = data.kubernetes_namespace_v1.kratos_ns.metadata[0].name
+    labels    = local.labels
+  }
+}
+
 resource "kubernetes_deployment_v1" "kratos" {
   metadata {
     name      = "${var.project}-kratos"
@@ -119,6 +127,8 @@ resource "kubernetes_deployment_v1" "kratos" {
         labels = local.labels
       }
       spec {
+        service_account_name = kubernetes_service_account_v1.kratos.metadata[0].name
+
         volume {
           name = "config-files"
           config_map {

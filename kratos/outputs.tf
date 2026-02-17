@@ -16,6 +16,11 @@ output "service_name" {
   value       = kubernetes_service_v1.kratos_service.metadata[0].name
 }
 
+output "service_account_name" {
+  description = "Name of created Kubernetes service account for the main Kratos server workload"
+  value       = kubernetes_service_account_v1.kratos.metadata[0].name
+}
+
 output "cookie_secret" {
   description = "Used (generated or imported) cookie secret"
   value       = local.cookie_secret
