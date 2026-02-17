@@ -14,8 +14,8 @@ A Terraform module for easy deployment of Ory Kratos.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.37.1 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.7.2 |
+| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >= 2.20 |
+| <a name="provider_random"></a> [random](#provider\_random) | >= 3.5 |
 
 ## Modules
 
@@ -32,6 +32,7 @@ No modules.
 | [kubernetes_job_v1.kratos_migrations](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1) | resource |
 | [kubernetes_secret_v1.kratos_config_yaml](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
 | [kubernetes_secret_v1.kratos_secret](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
+| [kubernetes_service_account_v1.kratos](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service_account_v1) | resource |
 | [kubernetes_service_v1.kratos_service](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service_v1) | resource |
 | [random_password.kratos_cipher_secret](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [random_password.kratos_cookie_secret](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
@@ -65,4 +66,5 @@ No modules.
 | <a name="output_cookie_secret"></a> [cookie\_secret](#output\_cookie\_secret) | Used (generated or imported) cookie secret |
 | <a name="output_external_ingress_url"></a> [external\_ingress\_url](#output\_external\_ingress\_url) | Public URL for connecting to deployed Kratos instance from outside the cluster, if ingress\_host was provided |
 | <a name="output_internal_service_url"></a> [internal\_service\_url](#output\_internal\_service\_url) | Cluster-private URLs for connecting to deployed Kratos instance, both public and admin API endpoints |
+| <a name="output_service_account_name"></a> [service\_account\_name](#output\_service\_account\_name) | Name of created Kubernetes service account for the main Kratos server workload |
 | <a name="output_service_name"></a> [service\_name](#output\_service\_name) | Name of created Kubernetes service for use with other routing schemes |
